@@ -16,9 +16,14 @@ param(
     $secondaryRegion
 )
 
+Write-Host "ResourceGroup:  $resourceGroup"
+Write-Host "CosmosDB:       $accountName"
+Write-Host "PrimaryRegion:  $primaryRegion"
+Write-Host "SecondaryRegion:$secondaryRegion"
+
 # Create an account with 2 regions
 Write-Host "---------- Azure Cosmos DB $accountName with $resourceGroup ----------"
-az cosmosdb create --name $accountName --resource-group $resourceGroupName --locations regionName=$primaryRegion failoverPriority=0 isZoneRedundant=False --locations regionName=$secondaryRegion failoverPriority=1 isZoneRedundant=False --default-consistency-level Session
+az cosmosdb create --name $accountName --resource-group $resourceGroupName --locations regionName=$primaryRegion failoverPriority=0 isZoneRedundant=False --locations regionName=$secondaryRegion failoverPriority=1 isZoneRedundant=False --default-consistency-level Session --enable-automatic-failover true
 
 # Add a region
 Write-Host "---------- Add region to Cosmos DB $accountName ----------"

@@ -31,13 +31,8 @@ param(
 Write-Host "ResourceGroup:  $resourceGroup"
 Write-Host "CosmosDB:       $accountName"
 Write-Host "PrimaryRegion:  $primaryRegion"
-Write-Host "Secondary:      $secondaryRegion"
-Write-Host "PrimaryRegion:  $dataBaseName"
-Write-Host "Secondary:      $containerName"
+Write-Host "SecondaryRegion:$secondaryRegion"
 
-# Enable service-managed failover on an existing account
-Write-Host "---------- Azure Cosmos DB $accountName Updating ----------"
-az cosmosdb update --name $accountName --resource-group $resourceGroup --enable-automatic-failover true
 
 # Trigger a manual failover to promote secondaryRegion 
 Write-Host "---------- Azure Cosmos DB - Failover [from '$primaryRegion' to '$secondaryRegion' region] ----------"
