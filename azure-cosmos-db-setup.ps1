@@ -21,12 +21,17 @@ Write-Host "CosmosDB:       $accountName"
 Write-Host "PrimaryRegion:  $primaryRegion"
 Write-Host "SecondaryRegion:$secondaryRegion"
 
-# Create an account with 2 regions
+
+# get the existing account details.
 Write-Host "---------- Azure Cosmos DB $accountName with $resourceGroup ----------"
-az cosmosdb create --name $accountName --resource-group $resourceGroupName --locations regionName=$primaryRegion failoverPriority=0 isZoneRedundant=False --locations regionName=$secondaryRegion failoverPriority=1 isZoneRedundant=False --default-consistency-level Session --enable-automatic-failover true
+$comosDbName = az cosmosdb show -g "$resourceGroup" -n "$accountName" --query name -o tsv
+
+# Enable service-managed failover on an existing account
+Write-Host "---------- Azure Cosmos DB $comosDbName Updating ----------"
+az cosmosdb update --name $comosDbName --resource-group $resourceGroup --enable-automatic-failover true
 
 # Add a region
-Write-Host "---------- Add region to Cosmos DB $accountName ----------"
-az cosmosdb update --name $accountName --resource-group $resourceGroupName --locations regionName=$primaryRegion failoverPriority=0 isZoneRedundant=True --locations regionName=$secondaryRegion failoverPriority=1 isZoneRedundant=True
+Write-Host "---------- Add region to Cosmos DB $comosDbName ----------"
+az cosmosdb update --name $comosDbName --resource-group $resourceGroupName --locations regionName=$primaryRegion failoverPriority=0 isZoneRedundant=True --locations regionName=$secondaryRegion failoverPriority=1 isZoneRedundant=True
 Write-Host "Primary:    $resourceGroup | $primaryRegion"
 Write-Host "Secondary:  $resourceGroup | $secondaryRegion"

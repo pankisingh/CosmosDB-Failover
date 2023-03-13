@@ -22,7 +22,6 @@ param(
     [Parameter(Mandatory=$True, Position=5)]
     [System.Boolean]
     $testMode
-
 )
 
 $updateThroughput=10000
@@ -33,9 +32,9 @@ Write-Host "PrimaryRegion:  $primaryRegion"
 Write-Host "SecondaryRegion:$secondaryRegion"
 
 
-# Trigger a manual failover to promote primaryRegion 
-Write-Host "---------- Azure Cosmos DB - Failover [from '$secondaryRegion' to '$primaryRegion' region] ----------"
-az cosmosdb failover-priority-change --failover-policies "$secondaryRegion=1" "$primaryRegion=0" --name $accountName --resource-group $resourceGroup
+# Trigger a manual failover to promote secondaryRegion 
+Write-Host "----- Azure Cosmos DB - Failover [from '$primaryRegion' to '$secondaryRegion' region] ------"
+az cosmosdb failover-priority-change --failover-policies "$secondaryRegion=0" "$primaryRegion=1" --name $accountName --resource-group $resourceGroup
 
 # Retrieve the current provisioned database throughput
 Write-Host "Retrieve the current provisioned database throughput"
@@ -53,6 +52,3 @@ if ($updateThroughput -lt $minimumThroughput){
 # Update database throughput
 Write-Host "Updating $databaseName throughput to $updateThroughput"
 az cosmosdb sql database throughput update --account-name $accountName --resource-group $resourceGroup --name $databaseName --max-throughput $updateThroughput
-
-
-
